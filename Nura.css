@@ -1,0 +1,385 @@
+
+
+/* 1. Global Reset and Setup */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --color-bg-dark: #030308;
+    --color-bg-darker: #000000;
+    --color-neon-cyan: #00ffff;
+    --color-neon-pink: #ff00ff;
+    --color-off-white: #e0e0e0;
+    --color-neon-green: #39ff14; 
+    --color-ambient-purple: #1a081a;
+}
+
+body {
+    font-family: 'Rajdhani', sans-serif;
+    color: var(--color-off-white);
+    background: var(--color-bg-dark);
+    min-height: 100vh;
+    display: flex;
+    overflow: hidden; 
+ animation: global-hue-shift 60s linear infinite;
+}
+
+/* Keyframe for subtle continuous hue shift */
+@keyframes global-hue-shift {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+}
+
+
+/* 2. Hero Section Layout (Full Screen, Centered) */
+.hero-section {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+
+        background: 
+        radial-gradient(circle at center, rgba(0, 255, 255, 0.05) 0%, transparent 60%),
+        linear-gradient(135deg, var(--color-bg-darker) 0%, #08081a 50%, var(--color-ambient-purple) 100%);
+    background-size: 100% 100%;
+    animation: 
+        radial-pulse 15s ease-in-out infinite alternate,
+        global-hue-shift 60s linear infinite reverse; 
+}
+
+@keyframes radial-pulse {
+    0% { background-position: 50% 50%; }
+    100% { background-position: 55% 55%; background-size: 120% 120%; }
+}
+
+
+
+/* 3.1. Animated Grid Lines */
+.background-glitch-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Intensified grid effect */
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 90px,
+        rgba(0, 255, 255, 0.08) 92px, 
+        rgba(255, 0, 255, 0.08) 94px 
+    );
+    opacity: 0.7;
+    animation: scanline-move 30s linear infinite;
+    z-index: 2;
+}
+
+.background-glitch-lines.second-layer {
+    background: repeating-linear-gradient(
+        90deg, 
+        transparent,
+        transparent 65px,
+        rgba(0, 255, 255, 0.05) 66px, 
+        rgba(255, 0, 255, 0.05) 67px
+    );
+    opacity: 0.5;
+    animation: scanline-move 20s linear reverse infinite;
+}
+
+@keyframes scanline-move {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+
+/* 3.2. Full-Screen CRT Scanline & Flicker Overlay */
+.hero-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Static scan lines and vertical noise */
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%),
+                linear-gradient(90deg, rgba(255, 0, 255, 0.05), rgba(0, 255, 255, 0.05));
+    background-size: 100% 4px, 4px 100%;
+    pointer-events: none;
+    z-index: 100; 
+    opacity: 0.3;
+    animation: screen-flicker 0.2s infinite alternate;
+}
+
+@keyframes screen-flicker {
+    0% { opacity: 0.3; }
+    50% { opacity: 0.2; }
+    100% { opacity: 0.4; }
+}
+
+/* 3.3. Data Ring - The central focal point */
+.data-ring {
+    position: absolute;
+    width: 700px;
+    height: 700px;
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    border-radius: 50%;
+    /* Subtle inner glow */
+    box-shadow: 0 0 50px rgba(0, 255, 255, 0.05) inset, 0 0 50px rgba(255, 0, 255, 0.05) inset;
+    z-index: 5;
+    pointer-events: none;
+    animation: rotate-slowly 60s linear infinite;
+}
+
+.data-ring::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 450px;
+    height: 450px;
+    border: 1px solid rgba(255, 0, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: rotate-slowly 40s linear infinite reverse;
+}
+
+@keyframes rotate-slowly {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+
+/* 4. Hero Content Styling */
+.hero-content {
+    max-width: 900px;
+    padding: 50px; 
+    z-index: 10; 
+    position: relative;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    
+   
+    border: none; 
+}
+
+/* 4.1. Flickering Content Border  */
+.hero-content::before, .hero-content::after {
+    content: '';
+    position: absolute;
+    z-index: 11; /* Keep brackets over the content box background */
+    width: 30px;
+    height: 30px;
+    pointer-events: none;
+}
+
+/* Top Left Bracket */
+.hero-content::before {
+    top: -10px; left: -10px;
+    border-top: 3px solid var(--color-neon-cyan);
+    border-left: 3px solid var(--color-neon-cyan);
+    animation: neon-flicker 1s step-end infinite alternate;
+}
+
+/* Bottom Right Bracket (using ::after for a different corner/color) */
+.hero-content::after {
+    bottom: -10px; right: -10px;
+    border-bottom: 3px solid var(--color-neon-pink);
+    border-right: 3px solid var(--color-neon-pink);
+    animation: neon-flicker 1.5s step-end infinite alternate-reverse;
+}
+
+@keyframes neon-flicker {
+    0%, 100% { opacity: 1; box-shadow: 0 0 5px var(--color-neon-cyan); }
+    50% { opacity: 0.4; box-shadow: none; }
+    52% { opacity: 1; box-shadow: 0 0 10px var(--color-neon-pink); }
+    54% { opacity: 0.6; }
+}
+
+
+/* 5. Headline Glitch Effect (Primary Animation Focus) */
+.hero-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 7vw;
+    font-weight: 800;
+    color: var(--color-neon-cyan);
+    letter-spacing: 0.3em;
+    padding-bottom: 20px;
+    
+    /* Neon Glow on main text */
+    text-shadow: 
+        0 0 15px rgba(0, 255, 255, 0.9), 
+        0 0 30px rgba(0, 255, 255, 0.6),
+        0 0 60px rgba(0, 255, 255, 0.3);
+    
+    opacity: 0;
+    transform: translateY(20px);
+    
+    /* Animation application: Fade-up first, then the primary text glitch-shift */
+    animation: 
+        fade-up 1s ease-out forwards, 
+        glitch-shift 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite alternate 1s; 
+    
+    position: relative;
+}
+
+/* Glitch Pseudo-elements keyframes (unchanged, still complex) */
+.hero-title::before, .hero-title::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    animation: none; 
+}
+
+.hero-title::before {
+    color: var(--color-neon-cyan);
+    mix-blend-mode: multiply; 
+    text-shadow: 0 0 8px var(--color-neon-cyan);
+    animation: glitch-copy 1.5s infinite alternate-reverse 1s, glitch-skew 3s infinite alternate;
+}
+
+.hero-title::after {
+    color: var(--color-neon-pink);
+    text-shadow: 0 0 8px var(--color-neon-pink);
+    animation: glitch-copy 1.5s infinite alternate 1s, glitch-skew 3s infinite alternate-reverse;
+}
+
+/* [Keyframes for fade-up, glitch-shift, glitch-copy, glitch-skew are unchanged] */
+@keyframes fade-up {
+    100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes glitch-shift {
+    0% {
+        text-shadow: 2px 0 15px var(--color-neon-cyan), -2px 0 15px var(--color-neon-pink);
+        transform: translate(0, 0) scaleY(1);
+    }
+    100% {
+        text-shadow: -3px 3px 15px var(--color-neon-pink), 3px -3px 15px var(--color-neon-cyan);
+        transform: translate(3px, -3px) scaleY(1.01);
+    }
+}
+@keyframes glitch-copy {
+    0% { transform: translate(0); clip: rect(0, 9999px, 0, 0); }
+    5% { clip: rect(40px, 9999px, 50px, 0); }
+    20% { clip: rect(10px, 9999px, 20px, 0); }
+    40% { clip: rect(90px, 9999px, 100px, 0); }
+    60% { clip: rect(20px, 9999px, 30px, 0); }
+    80% { clip: rect(80px, 9999px, 90px, 0); }
+    100% { transform: translate(0); clip: rect(0, 9999px, 0, 0); }
+}
+@keyframes glitch-skew {
+    0% { transform: skewX(0deg); }
+    20% { transform: skewX(1deg); }
+    40% { transform: skewX(-2deg); }
+    60% { transform: skewX(0deg); }
+    80% { transform: skewX(3deg); }
+    100% { transform: skewX(0deg); }
+}
+
+
+/* 6. Subheading and Minor Text */
+.hero-tagline {
+    font-size: 1.8vw; 
+    font-weight: 400;
+    margin: 20px 0 40px;
+    color: var(--color-neon-green); 
+    text-shadow: 0 0 5px var(--color-neon-green);
+    line-height: 1.5;
+    letter-spacing: 0.1em;
+    opacity: 0;
+
+    /* NEW: Scanning/Rendering Animation on Tagline */
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    animation: fade-in 2s ease-out forwards 1.5s; 
+}
+
+.hero-tagline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-bg-dark); /* Match background color */
+    border-right: 3px solid var(--color-neon-green); /* Cursor/Scan line */
+    animation: 
+        typewriter 2s steps(45) forwards 1.5s, 
+        blink-scan 0.5s step-end infinite 3.5s;
+}
+
+@keyframes typewriter {
+    from { width: 100%; }
+    to { width: 0; }
+}
+
+@keyframes blink-scan {
+    from, to { border-color: transparent; }
+    50% { border-color: var(--color-neon-green); }
+}
+
+.version-id {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    color: rgba(0, 255, 255, 0.5);
+    margin-top: 50px;
+    letter-spacing: 0.15em;
+    animation: fade-in 2s ease-out forwards 2s;
+    opacity: 0;
+}
+
+@keyframes fade-in {
+    100% { opacity: 1; }
+}
+
+/* 7. Call to Action Button */
+.cta-button {
+    display: inline-block;
+    padding: 15px 40px;
+    text-decoration: none;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--color-neon-pink);
+    border: 2px solid var(--color-neon-pink);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.1s ease-in-out; 
+    letter-spacing: 0.15em;
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px; 
+
+    animation: fade-in 2s ease-out forwards 2s, pulse 2s infinite alternate 3s; 
+    opacity: 0;
+}
+
+.cta-button:hover {
+    color: var(--color-bg-darker);
+    background: var(--color-neon-pink);
+    /* Extreme glow on hover */
+    box-shadow: 
+        0 0 10px var(--color-neon-pink), 
+        0 0 30px var(--color-neon-pink), 
+        0 0 60px var(--color-neon-pink),
+        0 0 80px rgba(255, 0, 255, 0.7);
+    transform: scale(1.05);
+}
+
+/* Keyframe for button pulse */
+@keyframes pulse {
+    0% { box-shadow: 0 0 1px var(--color-neon-pink); }
+    100% { box-shadow: 0 0 10px var(--color-neon-pink), 0 0 15px rgba(255, 0, 255, 0.5); }
+}
+
